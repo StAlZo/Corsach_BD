@@ -1,0 +1,1 @@
+pyuic5.exe -x C:\Users\SAZol\PycharmProjects\Corsach\ui_ux\main.ui -o C:\Users\SAZol\PycharmProjects\Corsach\ui_ux\main.py
