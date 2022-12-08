@@ -4,7 +4,7 @@ from PyQt5.uic import loadUi
 from PyQt5 import uic
 import sys
 from data_base.db_insert import add_user_db, add_auto_db, add_model_db, add_brand_db, add_order_db
-from data_base.db_select import select_model, select_brand, select_auto, select_price, select_order
+from data_base.db_select import select_model, select_brand, select_auto, select_price, select_order, select_user, select_auto_for_form
 from settings import REC
 from datetime import date, timedelta, datetime
 
@@ -19,14 +19,16 @@ class MainForm(QMainWindow):
         self.add_model.triggered.connect(self.__open_add_model)
         self.add_brand.triggered.connect(self.__open_add_brand)
         self.add_order.clicked.connect(self.__open_add_order)
+        self.show_user_butt.clicked.connect(self.__show_user)
+        self.show_car_butt.clicked.connect(self.__show_car)
         self.__show_order()
 
     def __open_add_user(self) -> None:
         add_user = AddUser()
         widget.addWidget(add_user)
         widget.setCurrentIndex(widget.currentIndex() + 1)
-        widget.setFixedWidth(350)
-        widget.setFixedHeight(200)
+        #widget.setFixedWidth(350)
+        #widget.setFixedHeight(200)
 
     def __open_add_car(self):
         add_car = AddCar()
@@ -37,22 +39,34 @@ class MainForm(QMainWindow):
         add_model = AddModel()
         widget.addWidget(add_model)
         widget.setCurrentIndex(widget.currentIndex() + 1)
-        widget.setFixedWidth(350)
-        widget.setFixedHeight(200)
+        #widget.setFixedWidth(350)
+        #widget.setFixedHeight(200)
 
     def __open_add_brand(self):
         add_brand = AddBrand()
         widget.addWidget(add_brand)
         widget.setCurrentIndex(widget.currentIndex() + 1)
-        widget.setFixedWidth(350)
-        widget.setFixedHeight(200)
+        #widget.setFixedWidth(350)
+        #widget.setFixedHeight(200)
 
     def __open_add_order(self):
         add_order = AddOrder()
         widget.addWidget(add_order)
         widget.setCurrentIndex(widget.currentIndex() + 1)
-        widget.setFixedWidth(720)
-        widget.setFixedHeight(500)
+        #widget.setFixedWidth(720)
+        #widget.setFixedHeight(500)
+
+    def __show_user(self):
+        show_user = UserShow()
+        widget.addWidget(show_user)
+        widget.setCurrentIndex(widget.currentIndex() + 1)
+        #widget.setFixedWidth(450)
+        #widget.setFixedHeight(270)
+
+    def __show_car(self):
+        show_car = AutoShow()
+        widget.addWidget(show_car)
+        widget.setCurrentIndex(widget.currentIndex() + 1)
 
     def __show_order(self):
         row_index = 0
@@ -62,6 +76,11 @@ class MainForm(QMainWindow):
                 self.tableWidget.setItem(row_index, 0, QTableWidgetItem(str(order[0])))
                 self.tableWidget.setItem(row_index, 1, QTableWidgetItem(str(order[1])))
                 self.tableWidget.setItem(row_index, 2, QTableWidgetItem(str(order[2])))
+                self.tableWidget.setItem(row_index, 3, QTableWidgetItem(str(order[3])))
+                self.tableWidget.setItem(row_index, 4, QTableWidgetItem(str(order[4])))
+                self.tableWidget.setItem(row_index, 5, QTableWidgetItem(str(order[5])))
+                self.tableWidget.setItem(row_index, 6, QTableWidgetItem(str(order[6])))
+                self.tableWidget.setItem(row_index, 7, QTableWidgetItem(str(order[7])))
 
                 row_index += 1
 
@@ -85,8 +104,7 @@ class AddUser(QDialog):
             main_form = MainForm()
             widget.addWidget(main_form)
             widget.setCurrentIndex(widget.currentIndex() + 1)
-            widget.setFixedWidth(620)
-            widget.setFixedHeight(300)
+
 
 
 class AddCar(QDialog):
@@ -117,8 +135,7 @@ class AddCar(QDialog):
             main_form = MainForm()
             widget.addWidget(main_form)
             widget.setCurrentIndex(widget.currentIndex() + 1)
-            widget.setFixedWidth(620)
-            widget.setFixedHeight(300)
+
 
 
 class AddModel(QDialog):
@@ -136,8 +153,7 @@ class AddModel(QDialog):
             main_form = MainForm()
             widget.addWidget(main_form)
             widget.setCurrentIndex(widget.currentIndex() + 1)
-            widget.setFixedWidth(620)
-            widget.setFixedHeight(300)
+
 
 
 class AddBrand(QDialog):
@@ -155,8 +171,7 @@ class AddBrand(QDialog):
             main_form = MainForm()
             widget.addWidget(main_form)
             widget.setCurrentIndex(widget.currentIndex() + 1)
-            widget.setFixedWidth(620)
-            widget.setFixedHeight(300)
+
 
 
 class AddOrder(QDialog):
@@ -208,13 +223,54 @@ class AddOrder(QDialog):
         self.for_payment.setText(f"{self.__cacalculate_price()}")
 
 
+class UserShow(QDialog):
+
+    def __init__(self):
+        super(UserShow, self).__init__()
+        loadUi("user_form.ui", self)
+        self.exit_butt.clicked.connect(self.__exit)
+        row_index = 0
+        for user in select_user():
+            self.tableWidget.setRowCount(row_index + 1)
+            self.tableWidget.setItem(row_index, 0, QTableWidgetItem(str(user[1])))
+            self.tableWidget.setItem(row_index, 1, QTableWidgetItem(str(user[2])))
+            self.tableWidget.setItem(row_index, 2, QTableWidgetItem(str(user[3])))
+            self.tableWidget.setItem(row_index, 3, QTableWidgetItem(str(user[4])))
+            row_index += 1
+
+    def __exit(self):
+        main_form = MainForm()
+        widget.addWidget(main_form)
+        widget.setCurrentIndex(widget.currentIndex() + 1)
+
+
+class AutoShow(QDialog):
+
+    def __init__(self):
+        super(AutoShow, self).__init__()
+        loadUi("auto_form.ui", self)
+        self.exit.clicked.connect(self.__exit)
+        row_index = 0
+        for auto in select_auto_for_form():
+            self.tableWidget.setRowCount(row_index + 1)
+            self.tableWidget.setItem(row_index, 0, QTableWidgetItem(str(auto[0])))
+            self.tableWidget.setItem(row_index, 1, QTableWidgetItem(str(auto[1])))
+            self.tableWidget.setItem(row_index, 2, QTableWidgetItem(str(auto[2])))
+            self.tableWidget.setItem(row_index, 3, QTableWidgetItem(str(auto[3])))
+            self.tableWidget.setItem(row_index, 4, QTableWidgetItem(str(auto[4])))
+            row_index += 1
+
+    def __exit(self):
+        main_form = MainForm()
+        widget.addWidget(main_form)
+        widget.setCurrentIndex(widget.currentIndex() + 1)
 
 
 app = QApplication(sys.argv)
 main_window = MainForm()
 widget = QtWidgets.QStackedWidget()
 widget.addWidget(main_window)
-widget.setFixedWidth(620)
-widget.setFixedHeight(300)
+#widget.setFixedWidth(620)
+#widget.setFixedHeight(300)
 widget.show()
 app.exec_()

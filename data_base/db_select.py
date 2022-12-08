@@ -12,15 +12,39 @@ def select_auto(brand, model):
     return auto
 
 
+def select_auto_for_form():
+    con = create_connection()
+    cursor = con.cursor()
+    cursor.execute(f"SELECT auto.number, brands.brand, model.model, location, cost FROM auto, brands, model "
+                   f"WHERE id_brand = brands.id AND "
+                   f"id_model = model.id ")
+    auto = cursor.fetchall()
+    cursor.close()
+    con.close()
+    return auto
+
+
 def select_order():
     con = create_connection()
     cursor = con.cursor()
-    cursor.execute(f"SELECT auto.number, users.number, orders.end_data FROM orders, users, auto "
-                   f"WHERE id_user = users.id AND id_auto = auto.id")
+    cursor.execute(f"SELECT auto.number, users.number, orders.end_data, users.name, users.last_name, users.drive_license, brands.brand, model.model "
+                   f"FROM orders, users, auto, model, brands "
+                   f"WHERE id_user = users.id AND id_auto = auto.id AND id_model = model.id AND id_brand = brands.id")
     order = cursor.fetchall()
     cursor.close()
     con.close()
+    print(type(order))
     return order
+
+
+def select_user():
+    con = create_connection()
+    cursor = con.cursor()
+    cursor.execute("SELECT * FROM users")
+    user = cursor.fetchall()
+    cursor.close()
+    con.close()
+    return user
 
 
 def select_model():
