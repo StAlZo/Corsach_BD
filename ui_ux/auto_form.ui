@@ -21,7 +21,7 @@
     <rect>
      <x>20</x>
      <y>0</y>
-     <width>601</width>
+     <width>511</width>
      <height>192</height>
     </rect>
    </property>
@@ -31,11 +31,6 @@
    <column>
     <property name="text">
      <string>Номер</string>
-    </property>
-   </column>
-   <column>
-    <property name="text">
-     <string>Новый столбец</string>
     </property>
    </column>
    <column>
@@ -62,7 +57,7 @@
   <widget class="QPushButton" name="exit">
    <property name="geometry">
     <rect>
-     <x>270</x>
+     <x>220</x>
      <y>200</y>
      <width>131</width>
      <height>23</height>
